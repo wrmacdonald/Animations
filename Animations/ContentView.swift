@@ -7,58 +7,122 @@
 
 import SwiftUI
 
+struct CornerRotateModifier: ViewModifier {
+    let amount: Double
+    let anchor: UnitPoint
+    
+    func body(content: Content) -> some View {
+        content
+            .rotationEffect(.degrees(amount), anchor: anchor)
+            .clipped()
+    }
+}
+
+extension AnyTransition {
+    static var pivot: AnyTransition {
+        .modifier(
+            active: CornerRotateModifier(amount: -90, anchor: .topLeading),
+            identity: CornerRotateModifier(amount: 0, anchor: .topLeading)
+        )
+    }
+}
+
 struct ContentView: View {
-    @State private var animationAmount = 0.0
+    @State private var isShowingRed = false
+    
+//    @State private var isShowingRed = false
+    
+//    let letters = Array("Hello SwiftUI")
+//    @State private var enabled = false
+//    @State private var dragAmount = CGSize.zero
+    
+//    @State private var dragAmount = CGSize.zero
+    
+//    @State private var enabled = false
     
     var body: some View {
-        Button("Tap Me") {
-            withAnimation(.smooth) {
-                animationAmount += 80
+        ZStack {
+            Rectangle()
+                .fill(.blue)
+                .frame(width: 200, height: 200)
+            
+            if isShowingRed {
+                Rectangle()
+                    .fill(.red)
+                    .frame(width: 200, height: 200)
+                    .transition(.pivot)
             }
         }
-        .padding(40)
-        .background(.red)
-        .foregroundStyle(.white)
-        .clipShape(.circle)
-        .rotation3DEffect(.degrees(animationAmount), axis: (x: 0.0, y: 0.0, z: 1.0))
-        // animation with binding animation:
-//        return VStack {
-//            Stepper("Scale amount", value: $animationAmount.animation(), in: 1...10)
-//            
-//            Spacer()
-//            
+        .onTapGesture {
+            withAnimation {
+                isShowingRed.toggle()
+            }
+        }
+        
+//        VStack {
 //            Button("Tap Me") {
-//                animationAmount += 1
+//                withAnimation {
+//                    isShowingRed.toggle()
+//                }
 //            }
-//            .padding(40)
-//            .background(.red)
-//            .foregroundStyle(.white)
-//            .clipShape(.circle)
-//            .scaleEffect(animationAmount)
+//            
+//            if isShowingRed {
+//                Rectangle()
+//                    .fill(.red)
+//                    .frame(width: 200, height: 200)
+//                    .transition(.asymmetric(insertion: .scale, removal: .opacity))
+//            }
 //        }
         
-        // animated button with implicit animations:
-//        Button("Tap Me!") {
-////            animationAmount += 1
+//        HStack(spacing: 0) {
+//            ForEach(0..<letters.count, id: \.self) { num in
+//                Text(String(letters[num]))
+//                    .padding(5)
+//                    .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
+//                    .background(enabled ? .blue : .red)
+//                    .offset(dragAmount)
+//                    .animation(.linear.delay(Double(num) / 20), value: dragAmount)
+//            }
 //        }
-//        .padding(50)
-//        .background(.red)
-//        .foregroundStyle(.white)
-//        .clipShape(.circle)
-//        .overlay(
-//            Circle()
-//                .stroke(.red)
-//                .scaleEffect(animationAmount)
-//                .opacity(2 - animationAmount)
-//                .animation(
-//                    .easeOut(duration: 1)
-//                        .repeatForever(autoreverses: false),
-//                    value: animationAmount
-//                )
+//        .gesture(
+//            DragGesture()
+//                .onChanged { dragAmount = $0.translation }
+//                .onEnded { _ in
+//                    dragAmount = .zero
+//                    enabled.toggle()
+//                }
 //        )
-//        .onAppear {
-//            animationAmount = 2
+        
+//        LinearGradient(
+//            colors: [.yellow, .red],
+//            startPoint: .topLeading,
+//            endPoint: .bottomTrailing
+//        )
+//        .frame(width: 300, height: 200)
+//        .clipShape(.rect(cornerRadius: 10))
+//        .offset(dragAmount)
+//        .gesture(
+//            DragGesture()
+//                .onChanged { dragAmount = $0.translation }
+//                .onEnded { _ in
+//                    withAnimation(.bouncy) {    // explicit animation just on ending
+//                        dragAmount = .zero
+//                    }
+//                }
+//        )
+////        .animation(.bouncy, value: dragAmount)      // implicit animation
+            
+        
+//        Button("Tap Me") {
+//            enabled.toggle()
 //        }
+//        .frame(width: 200, height: 200)
+//        .background(enabled ? .blue : .red)
+//        .foregroundStyle(.white)
+////        .animation(.default, value: enabled)
+//        .animation(nil, value: enabled)         // don't animate anything above this point
+//        .clipShape(.rect(cornerRadius: enabled ? 60 : 0))
+//        .animation(.spring(duration: 1, bounce: 0.9), value: enabled)
     }
 }
 

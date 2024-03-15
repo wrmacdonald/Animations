@@ -21,6 +21,10 @@
 - implicit animaitions
 - binding animations
 - withAnimation
+- controlling animation stack with multiple animations
+- animating gestures
+- transitions - when showing & hiding views
+- ViewModifier - for creating custom transitions
 
 
 
