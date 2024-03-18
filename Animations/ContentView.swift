@@ -28,6 +28,10 @@ extension AnyTransition {
 }
 
 struct ContentView: View {
+    // Ideas: background, text, button
+    @State private var enlarge = false
+    @State private var opaque = false
+    
     @State private var isShowingRed = false
     
 //    @State private var isShowingRed = false
@@ -58,6 +62,14 @@ struct ContentView: View {
                 isShowingRed.toggle()
             }
         }
+        
+        Text("Hello World")
+            .font(enlarge ? .title : .title2)
+            .opacity(opaque ? 0.2 : 1)
+            .onAppear(perform: pulsateText)
+            .onTapGesture {
+                withAnimation(Animation.easeIn) { enlarge.toggle() }
+            }
         
 //        VStack {
 //            Button("Tap Me") {
@@ -123,6 +135,12 @@ struct ContentView: View {
 //        .animation(nil, value: enabled)         // don't animate anything above this point
 //        .clipShape(.rect(cornerRadius: enabled ? 60 : 0))
 //        .animation(.spring(duration: 1, bounce: 0.9), value: enabled)
+    }
+    
+    private func pulsateText() {
+        withAnimation(Animation.easeInOut(duration: 0.7).repeatForever(autoreverses: true)) {
+            opaque.toggle()
+        }
     }
 }
 
